@@ -1,4 +1,5 @@
-please run this command to run the back-end app
+please run this command to install the back-end app
+
     php artisan migrate;
     php artisan db:seed;
     sudo php artisan passport:install; sudo php artisan passport:client --personal
