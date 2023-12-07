@@ -21,7 +21,7 @@ class UserAPIController extends Controller
         $credentials = ['email'=> $request->email , 'password' => $request->password];
         if (!Auth::attempt($credentials)) {
             $this->incrementAttempts($request);
-            return message(false, [],'Unauthorized', 401);
+            return message(false, [],'Unauthorized');
         }
         if(Auth::attempt($credentials)){
             try{

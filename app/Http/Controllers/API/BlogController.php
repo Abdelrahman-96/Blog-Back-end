@@ -5,15 +5,28 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBlog;
 use App\Http\Resources\BlogResource;
-use App\Models\Blog;
+use App\Services\BlogService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
+
+    private $service;
+
+    /**
+     * [Make Setup For using Blogs Actions]
+     *
+     * @param  BlogService  $service
+     * @return void
+     */
+    public function __construct(BlogService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index(Request $request){
-        $parPage = $request->pare_page ?? 3; 
-        $items = Blog::paginate($parPage);
+        $parPage = $request->pare_page ?? 3;
+        $items = $this->service->get($request, $parPage); 
         $blogs = BlogResource::collection($items);
         $data = [
             'current_page' => $items->currentPage(),
@@ -33,7 +46,7 @@ class BlogController extends Controller
         if(!$id){
             return 'This blog doesn\'t exist!';
         }
-        $blog = Blog::find($id);
+        $blog = $this->service->find($id); 
         if (!$blog) {
             return 'This blog doesn\'t exist!';
         }
@@ -45,8 +58,7 @@ class BlogController extends Controller
         $request->merge([
             'user_id' => user()->id
         ]);
-
-        $blog = Blog::create($request->all());
+        $blog = $this->service->save($request); 
         $blog->addMedia($request->media)->toMediaCollection('images');
         return message(true, [],'Blog created successfully');
     }

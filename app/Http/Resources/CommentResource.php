@@ -21,6 +21,7 @@ class CommentResource extends JsonResource
             'mail' => $this->mail,
             'url' => $this->url,
             'description' => $this->description,
+            'user_id' => $this->user_id,
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
